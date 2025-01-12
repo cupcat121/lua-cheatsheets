@@ -16,6 +16,3 @@ print(1 .. 1)   ----> '11'
 -- use *to{string,number}* to explicitly convert the variable type
 print(tostring(1)) ----> '1'
 print(tonumber("1"))   ----> 1
-
--- moreover, use string.byte to get numeric code of a character
-print(string.byte('1'))    ----> 49
