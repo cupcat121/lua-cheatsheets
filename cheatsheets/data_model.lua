@@ -153,7 +153,9 @@ function fa(a, b, c)
     return a, b, c
 end
 
--- define a local function, same as *local fb=function() ... end*
+-- define a local function
+-- in lua it is expanded to
+local fb; function fb() end
 local function fb(a)
     function fb_closure()
         print("im wrapped")
@@ -164,6 +166,7 @@ local function fb(a)
         print("im anonymous function")
     end
 end
+
 -- if the function has one single argument which is a string or table,
 -- parentheses while calling the function can be optional
 fb(1)
@@ -214,12 +217,12 @@ function fd(...)
 end
 tb = table.pack(fd(table.unpack { 1, 2, nil, 3 })) ----> {1, 2, 0, 3, n=4}
 
--- control flow structures
---
--- expressions
 
--- concatenated expressions are evaluated from right to left
-print(0.1 ^ 2 ^ 2 ^ 64) ----> 0.1 ^ (2 ^ (2 ^ 64)), prone to overflow
--- evaluate then assign values
-x, y = 1, 2
-x, y = y, x ----> common lua idiom to swap two values
+-- variable binding in functions happens while calling it
+function fd()
+    print(d)
+end
+d = 5
+fd()    ----> 5
+d = 6
+fd()    ----> 6
