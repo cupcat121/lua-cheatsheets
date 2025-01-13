@@ -25,6 +25,11 @@ print(tonumber("1"))   ----> 1
 -- local variables has its scope limited to the block
 -- a block may be a control structures, function body, or just the current file (chunk)
 local a;    ----> its scope has it limited to the chunk here (the current file)
+local b = a
+-- *local* denotes declaration
+local a = 1     -- *a* is declared twice, and creates a brand-new local variable named *a*
+print(b)    ----> nil (*b* points to the first *a*)
+
 local function fa(...)
     return ...
 end
