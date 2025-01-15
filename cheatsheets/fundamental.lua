@@ -34,7 +34,7 @@ local function fa(...)
     return ...
 end
 
--- *do end* blocks denote scopes in lua like *{}* in C language
+-- *do end* blocks denote scopes in lua simalar to *{}* code blocks in C-like language
 local a = 2
 do
     local a = 1
@@ -48,13 +48,20 @@ print(a)    ----> 2
 -- expressions
 
 -- concatenated expressions are evaluated from right to left
-print(0.1 ^ 2 ^ 2 ^ 64) ----> 0.1 ^ (2 ^ (2 ^ 64)), prone to overflow
+print(0.1 ^ 2 ^ 2 ^ 256) ----> 0.1 ^ (2 ^ (2 ^ 64))
+
+
+-- statements
+--
+-- multiple statements can be put in one line
+x = 1 y = 2     ----> not recommended!
+x = 1; y = 2
+
+-- assignment
 -- evaluate then assign values
 x, y = 1, 2
 x, y = y, x ----> common lua idiom to swap two values
 
--- statements
---
 -- *if else* structure
 if nil then
     print "i will never print"
@@ -73,7 +80,7 @@ while nil do
     end
 end
 
--- *repeat until* structure
+-- *repeat-until* structure
 -- stop the loop until the condition is true
 i = -5
 repeat
@@ -94,6 +101,6 @@ for i = 1, 5, 1 do
 end
 
 -- generic for structure
-for i, v in pairs{a=1,b=2} do
+for i, v in pairs{a = 1, b = 2} do
     print(i .. " = " .. v)
 end

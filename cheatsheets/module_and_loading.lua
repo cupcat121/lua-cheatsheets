@@ -13,8 +13,9 @@ f3 = assert(load("local a = 'load';print('im in ' .. a)"))()      -----> more ro
 -- use *require* to load a module
 local Math = require "math"
 -- *require* will add an entry in *package.loaded* when you import a module
+-- it prevents you load a module twice
 print(package.loaded['math'])
--- module search path can be found in *package.path* (pure lua module) and *package.cpath* (compiled module)
+-- module search path can be found in *package.path* (pure lua module) and *package.cpath* (native library)
 print(package.path, package.cpath)
 -- use *package.loadlib* to load a native library
 

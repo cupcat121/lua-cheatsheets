@@ -108,7 +108,8 @@ a["b"] = 5
 
 -- length operator used in tables but not sequences will be frustrating
 -- running in lua5.4.7
-a1 = { 1, 2, nil, 3, 4 }
+a1 = { 1, 2, nil, 3 }
+a1[#a1+1] = 4   ----> common idiom to append a value to list
 print(#a1) ----> 5
 a2 = {}
 a[1] = 1
@@ -167,7 +168,7 @@ local function fb(a)
     end
 end
 
--- if the function has one single argument which is a string or table,
+-- if the function has one single argument which is a string literal or table constructor,
 -- parentheses while calling the function can be optional
 fb(1)
 fb "1"
