@@ -62,14 +62,14 @@ end
 Programmer = Worker.build_by_position("programmer", 3000)
 Manager = Worker.build_by_position("manager", 6000)
 -- *instantiation* simlar to other OOP languages
-local junior_worker = Programmer:new()
-local senior_worker = Programmer:new{personel_limit = 50}
+local junior_programmer = Programmer:new()
+local senior_programmer = Programmer:new{personel_limit = 50}
 local senior_manager = Manager:new{upper_limit = 20000}
 
-junior_worker:track_guy("bob", 2)
-junior_worker:track_guy("mile", 1)
-junior_worker:track_guy("mile", 1)
-senior_worker:track_guy("kart", 15)
+junior_programmer:track_guy("bob", 2)
+junior_programmer:track_guy("mile", 1)
+junior_programmer:track_guy("mile", 1)
+senior_programmer:track_guy("kart", 15)
 senior_manager:track_guy("steve", 12)
 
 -- lua core defines bunch of methods called *metamethod* to abstract some common operations
@@ -91,9 +91,9 @@ function Programmer:__add(o)
     end
     return self
 end
-
-all_workers = junior_worker + senior_worker
-for k, v in pairs(all_workers.tracked_guys) do
+-- it defines the addition of *self + o*
+all_programmer = junior_programmer + senior_programmer
+for k, v in pairs(all_programmer.tracked_guys) do
     print(k .. ": " .. v.salary)
 end
 
@@ -102,11 +102,31 @@ function Programmer:__tostring()
     return string.format("Progarmmers total: %d", self.total)
 end
 -- print/tostring will invoke __tostring metamethod
-print(all_workers)
-print(tostring(all_workers))
+print(all_programmer)
+print(tostring(all_programmer))
 
--- __pair metamethod (since lua5.2)
---
+-- __pairs metamethod (since lua5.2)
+function Programmer:__pairs()
+    -- stateful iterator
+    local tracked = self.tracked_guys
+    local keys = {}
+    local index = 0
+    for k, _ in pairs(tracked) do
+        keys[#keys+1] = k
+    end
+    return function ()
+        index = index + 1
+        local k = keys[index]
+        local v = tracked[k]
+        if v then
+            return k, v.salary
+        end
+    end
+end
+-- *pairs* will call it directly if exists
+for k, v in pairs(all_programmer) do
+    print(k .. ": " .. v)
+end
 
 -- __index __newindex metamethod
 --

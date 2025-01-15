@@ -91,6 +91,7 @@ print(string.byte('1')) ----> 49
 1. mutable, dynamically sized
 2. any uninitialized fields will be nil
 3. tables start with index of one, different from most of languages
+4. when we iterate over tables using *pairs*, the order of elements is not guaranteed
 ]]
 
 -- usually we call this type of tables sequence that they have no *holes* (nil) among values
