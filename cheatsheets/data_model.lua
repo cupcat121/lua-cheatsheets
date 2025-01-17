@@ -94,7 +94,10 @@ print(string.byte('1')) ----> 49
 4. when we iterate over tables using *pairs*, the order of elements is not guaranteed
 ]]
 
--- usually we call this type of tables sequence that they have no *holes* (nil) among values
+-- we call this type of table list (no key-value pairs)
+-- it can be traversed by elements' order (incremental index starting from *one*)
+a = { 1, 2, nil, 3 }
+-- if they have no *holes* (nil) among values, usually we call this type of list sequence
 a = { 1, 2, 3 }
 -- length operator works seamlessly in these sequences, like strings
 print(#a) ----> 3
@@ -110,8 +113,8 @@ a["b"] = 5
 -- length operator used in tables but not sequences will be frustrating
 -- running in lua5.4.7
 a1 = { 1, 2, nil, 3 }
-a1[#a1+1] = 4   ----> common idiom to append a value to list
-print(#a1) ----> 5
+a1[#a1 + 1] = 4 ----> common idiom to append a value to list
+print(#a1)      ----> 5
 a2 = {}
 a[1] = 1
 a[100] = 2
@@ -158,6 +161,7 @@ end
 -- define a local function
 -- in lua it is expanded to
 local fb; function fb() end
+
 local function fb(a)
     function fb_closure()
         print("im wrapped")
@@ -209,7 +213,7 @@ fc(table.unpack { 1, 2, nil, 3 }) ----> return=2, nil, 3 (not a table!)
 -- use table.pack to collect arguments into a table and add a extra field *n* with the total number of passed arguments
 -- we can use *n* to find out whether none of arguments is nil
 function fd(...)
-    local args = table.pack(...)    ----> {..., n=?}
+    local args = table.pack(...) ----> {..., n=?}
     for i = 1, args.n do
         if args[i] == nil then
             args[i] = 0
@@ -217,6 +221,7 @@ function fd(...)
     end
     return args
 end
+
 tb = table.pack(fd(table.unpack { 1, 2, nil, 3 })) ----> {1, 2, 0, 3, n=4}
 
 
@@ -224,7 +229,76 @@ tb = table.pack(fd(table.unpack { 1, 2, nil, 3 })) ----> {1, 2, 0, 3, n=4}
 function fd()
     print(d)
 end
+
 d = 5
-fd()    ----> 5
+fd() ----> 5
 d = 6
-fd()    ----> 6
+fd() ----> 6
+
+
+-- iterator
+--
+-- stateful iterator
+-- they keep their internal states (index or something) by making closure
+function ipairs2(t)
+    local t = t
+    local i = 0
+    return function()
+        i = i + 1
+        local v = t[i]
+        if v then
+            return i, v
+        end
+    end
+end
+
+--[[
+generic for-loop does three things here
+    1. keeps the return of *ia* (usually we name it *the iterator function*)
+    2. calls the iterator function successively at every loops then assigns *i* *v* returned by every call
+    3. terminates the loop once *i* and *v* is nil
+]]
+ta = { 2, 3, 4 }
+for i, v in ipairs2(ta) do
+    print(i .. " = " .. v)
+end
+
+-- stateless iterator
+-- iterator that does not contain internal states by itself
+-- hence there is no need to make any closure (better performance)
+--[[
+sematics of generic for:
+
+for _v1, _v2, ..., _vn in _f, _t, i do
+    [BLOCK]
+end
+
+it's equivalent to:
+
+do
+    local _f, _t, i = _f, _t, i
+    while true do
+        local _v1, _v2, ..., _vn = _f(_t, i)
+        __v = _v1   ----> control variable
+        if __v == nil then break end
+        [BLOCK]
+    end
+end
+-- in lua, we usually call *__v* (first returned value by the iterator function) as *control variable*
+-- if the control variable is nil, the loop terminates
+]]
+local function iter(tt, i) ----> _f(_t, i)
+    i = i + 1
+    local v = tt[i]
+    if not v then
+        i = nil ----> control variable makes the loop break
+    end
+    return i, v
+end
+function ipairs3(tt)
+    return iter, tt, 0 ----> _f, _t, _i
+end
+
+for i, v in ipairs3(ta) do
+    print(string.format("i=%s v=%s", i, v))
+end
