@@ -1,3 +1,5 @@
+---@diagnostic disable: lowercase-global
+
 -- meta{table,method}, then class
 --
 -- metatable defines operations of its instances
@@ -47,11 +49,11 @@ function Worker:track_guy(name, working_age)
 end
 
 -- default *new* method to instantise from *self*
-function Worker:new(obj)
+function Worker:new(o)
     -- set attributes table to "class" itself
     self.__index = self
     -- set instance fields
-    local obj = obj or {}
+    local obj = o or {}
     obj.tracked_guys = {}
     obj.total = 0
     -- inherits attributes from "class" itself

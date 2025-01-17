@@ -1,3 +1,5 @@
+---@diagnostic disable: lowercase-global
+
 -- IO operation
 
 -- open a file

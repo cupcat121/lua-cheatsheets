@@ -1,3 +1,5 @@
+---@diagnostic disable: assign-type-mismatch, lowercase-global
+
 -- data model and type
 
 -- there are 6+2 of basic and top level types in lua:

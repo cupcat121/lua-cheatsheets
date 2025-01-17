@@ -1,3 +1,5 @@
+---@diagnostic disable: lowercase-global
+
 -- lexical conversion
 --
 -- identifier

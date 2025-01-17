@@ -1,3 +1,5 @@
+---@diagnostic disable: lowercase-global
+
 -- dynamically load a file
 --
 -- *dofile* will run the chunks of code and raise errors
